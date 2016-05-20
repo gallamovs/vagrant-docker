@@ -1,0 +1,6 @@
+.vagrant/
+.idea/*
+*.box
+*.tar.gz
+*.gz
+*.zip
