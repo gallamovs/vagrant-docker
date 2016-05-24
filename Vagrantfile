@@ -88,15 +88,28 @@ Vagrant.configure("2") do |config|
     d.build_image "/vagrant/docker-images/php",
       args: "-t docker-images/php"
 
-    d.pull_images "mysql:5.5"
+    d.build_image "/vagrant/docker-images/mysql",
+      args: "-t docker-images/mysql"
+
+    d.pull_images "composer/composer"
+
+    d.build_image "/vagrant/docker-images/git",
+      args: "-t docker-images/git"
 
     d.run "mysql",
-      args: "-v '/var/www/db:/var/lib/mysql' -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=mySchema"
+      image: "docker-images/mysql",
+      args: "-v '/var/www/db:/var/lib/mysql' -p 3306:3306 -e MYSQL_ROOT_PASSWORD=option123 -e MYSQL_DATABASE=magento"
 
-    d.run "docker-images/php",
-      args: "-v '/var/www/public:/var/www/public' --link mysql:mysql"
+    d.run "php",
+      image: "docker-images/php",
+      args: "-v /var/www/public:/var/www/public --link mysql:mysql"
 
-    d.run "docker-images/nginx",
-      args: "-p 80:80 --volumes-from docker-images-php --link docker-images-php:phpfpmupstream"
+    d.run "git",
+      image: "docker-images/git",
+      args: "--volumes-from php -v ~/.ssh:/.ssh_host"
+
+    d.run "nginx",
+      image: "docker-images/nginx",
+      args: "-p 80:80 --volumes-from php --link php:php"
   end
 end

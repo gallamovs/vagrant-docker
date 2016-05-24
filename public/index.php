@@ -1,4 +1,14 @@
 <?php
+$servername = "10.0.2.15";
+$username = "root";
+$password = "secret";
 
+// Create connection
+$conn = mysqli_connect($servername, $username, $password);
 
-echo "test";
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+echo "Connected successfully";
+?>
